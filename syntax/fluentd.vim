@@ -9,20 +9,19 @@ endif
 
 syn case ignore
 
-syn keyword FluentdDirectiveKeyword source filter match label contained nextgroup=FluentdDirectiveCondition skipwhite
 
-syn match FluentdDirectiveBegin +[^<>]\++ contained
-syn match FluentdDirectiveEnd +[^<>]\++ contained
+syn keyword FluentdDirectiveKeyword     contained source filter match label nextgroup=FluentdDirectiveCondition skipwhite
 
-syn match FluentdComment +#.*+
-syn match FluentdString +"[^"]*"+
+syn match   FluentdDirectiveBegin       contained  +[^<>]\++
+syn match   FluentdDirectiveEnd         contained +[^<>]\++
+syn match   FluentdComment +#.*+
+syn match   FluentdString +"[^"]*"+
 
-syn match FluentdDirectiveLabel +@[^>]*+ contained
-syn region FluentdPluginBegin matchgroup=fluentdDelimiterBegin start=+<+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveLabel,FluentdDirectiveBegin,FluentdStructure
-syn region FluentdPluginEnd matchgroup=fluentdDelimiterEnd start=+</+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveEnd,FluentdStructure
+syn match   FluentdDirectiveLabel    contained +@[^>]*+
 
-syn match FluentdTag +^\s\+@\S*+
-syn match FluentdUserTag +@[^>]*+
+"syn match FluentdTag +^\s\+@\S*+
+syn match FluentdCommonParameter +@\(type\|id\).*$+ contains=FluentdInputPluginType
+"syn match FluentdUserTag +@[^>]*+
 
 syn match FluentdNumber +\s\d\+[\s\n]+
 syn match FluentdDecimal +\s\d\+\.\d\++
@@ -36,31 +35,37 @@ syn keyword FluentdBoolean true false
 syn match FluentdUnderline +http[^>]*+
 
 syn keyword FluentdStructure server record regexp store buffer secondary parse contained nextgroup=FluentdDirectiveCondition skipwhite
-syn keyword FluentdInputPluginType tail forward udp tcp unix http syslog exec dummy monitor_agent windows_eventlog
+syn keyword FluentdInputPluginType tail forward udp tcp unix http syslog exec dummy monitor_agent windows_eventlog contained
 syn keyword FluentdOutputPluginType file forward http exec exec_filter secondary_file copy relabel roundrobin stdout null s3 kafka elasticsearch mongo mongo_replset rewrite_tag_filter webhdfs
 syn keyword FluentdFilterPluginType record_transformer
 
 syn keyword FluentdParameter host port apikey auto_create_table path tag enable_ruby pos_file path_timezone exclude_path refresh_interval limit_recently_modified skip_refresh_on_startup read_from_head encoding read_lines_limit multiline_flush_interval pos_file_compaction_interval path_key rotate_wait enable_watch_timer enable_stat_watcher open_on_every_update emit_unmatched_lines ignore_repeated_permission_error
 
 
+syn region FluentdPluginBegin  matchgroup=fluentdDelimiterBegin start=+<+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveLabel,FluentdDirectiveBegin,FluentdStructure
+syn region FluentdPluginEnd matchgroup=fluentdDelimiterEnd start=+</+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveEnd,FluentdStructure
+
 hi link FluentdInclude            Include
 hi link FluentdUnderline          Underlined
+hi link FluentdCommonParameter    Include
 
 hi link FluentdInputPluginType    Type
-hi link FluentdOutputPluginType   Type
-hi link FluentdFilterPluginType   Type
+"hi link FluentdOutputPluginType   Type
+"hi link FluentdFilterPluginType   Type
 
 hi link FluentdParameter          Tag
 hi link FluentdStructure          Structure
+"hi link FluentdTag                Identifier
+hi link FluentdTag                Include
+hi link FluentdUserTag            Function
+"hi link FluentdUserTag            Include
 
 hi link FluentdDirectiveKeyword   Label
 hi link FluentdDelimiterBegin     Function
-hi link FluentdDelimiterEnd       Identifier
+hi link FluentdDelimiterEnd       Function
 hi link FluentdDirectiveLabel     Function
 hi link FluentdComment            Comment
 
-hi link FluentdTag                Identifier
-hi link FluentdUserTag            Function
 hi link FluentdString             String
 hi link FluentdNumber             Number
 hi link FluentdDecimal            Number

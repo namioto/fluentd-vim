@@ -18,7 +18,7 @@ command_exists git || {
     exit 1
 }
 
-git clone --mirror https://github.com/namioto/fluentd-vim.git $TMP_PATH
+git clone https://github.com/namioto/fluentd-vim.git $TMP_PATH
 mkdir -p $VIM_SYNTAX_PATH
 cp -v /var/tmp/fluentd-vim/syntax/fluentd.vim $VIM_SYNTAX_PATH/fluentd.vim
 

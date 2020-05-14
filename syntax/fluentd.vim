@@ -9,52 +9,79 @@ endif
 
 syn case ignore
 
-
+" Keyword Syntax
 syn keyword FluentdDirectiveKeyword     contained source filter match label nextgroup=FluentdDirectiveCondition skipwhite
+syn keyword FluentdSection              contained server record regexp store buffer secondary parse nextgroup=FluentdDirectiveCondition skipwhite
 
-syn match   FluentdDirectiveBegin       contained  +[^<>]\++
+" Input Plugin Type
+syn keyword FluentdInputPluginType      contained tail
+syn keyword FluentdInputPluginType      contained forward
+syn keyword FluentdInputPluginType      contained udp tcp
+syn keyword FluentdInputPluginType      contained unix
+syn keyword FluentdInputPluginType      contained http
+syn keyword FluentdInputPluginType      contained syslog
+syn keyword FluentdInputPluginType      contained exec
+syn keyword FluentdInputPluginType      contained dummy
+syn keyword FluentdInputPluginType      contained monitor_agent
+syn keyword FluentdInputPluginType      contained windows_eventlog
+" Output Plugin Type
+syn keyword FluentdOutputPluginType     contained file forward http 
+syn keyword FluentdOutputPluginType     contained exec exec_filter 
+syn keyword FluentdOutputPluginType     contained secondary_file 
+syn keyword FluentdOutputPluginType     contained copy relabel 
+syn keyword FluentdOutputPluginType     contained roundrobin 
+syn keyword FluentdOutputPluginType     contained stdout 
+syn keyword FluentdOutputPluginType     contained null s3 
+syn keyword FluentdOutputPluginType     contained kafka 
+syn keyword FluentdOutputPluginType     contained elasticsearch 
+syn keyword FluentdOutputPluginType     contained mongo mongo_replset 
+syn keyword FluentdOutputPluginType     contained rewrite_tag_filter 
+syn keyword FluentdOutputPluginType     contained webhdfs
+" Filter Plugin Type
+syn keyword FluentdFilterPluginType     contained record_transformer
+syn keyword FluentdFilterPluginType     contained grep
+
+"syn keyword FluentdParameter host port apikey auto_create_table path tag enable_ruby pos_file path_timezone exclude_path refresh_interval limit_recently_modified skip_refresh_on_startup read_from_head encoding read_lines_limit multiline_flush_interval pos_file_compaction_interval path_key rotate_wait enable_watch_timer enable_stat_watcher open_on_every_update emit_unmatched_lines ignore_repeated_permission_error
+
+" Match Syntax
+syn match   FluentdDirectiveBegin       contained +[^<>]\++
 syn match   FluentdDirectiveEnd         contained +[^<>]\++
+syn match   FluentdDirectiveLabel       contained +@[^>]*+
+
 syn match   FluentdComment +#.*+
 syn match   FluentdString +"[^"]*"+
+syn match   FluentdNumber +\s\d\+[\s\n]+
+syn match   FluentdDecimal +\s\d\+\.\d\++
+syn match   FluentdIp +\s\+\d\{1,3}\(\.\d\{1,3}\)\{3}\(:\d\{1,5}\|/\d\{1,2}\)\?+
+syn match   FluentdEnvironment +[#\$]{.*}+
+syn match   FluentdRubyEnvironment +<%=.*%>+
 
-syn match   FluentdDirectiveLabel    contained +@[^>]*+
+syn match   FluentdInclude +@include[^>]*+
+syn match   FluentdUnderline /https\?:\/\/\(\w\+\(:\w\+\)\?@\)\?\([A-Za-z][-_0-9A-Za-z]*\.\)\{1,}\(\w\{2,}\.\?\)\{1,}\(:[0-9]\{1,5}\)\?\S*/
+
+syn keyword FluentdBoolean true
+syn keyword FluentdBoolean false
 
 "syn match FluentdTag +^\s\+@\S*+
-syn match FluentdCommonParameter +@\(type\|id\).*$+ contains=FluentdInputPluginType
+syn match FluentdPluginParameter +@type .*$+ contains=FluentdInputPluginType,FluentdOutputPluginType,FluentdFilterPluginType
+syn match FluentdCommonParameter +@\(id\|log_level\|label\) .*$+
 "syn match FluentdUserTag +@[^>]*+
 
-syn match FluentdNumber +\s\d\+[\s\n]+
-syn match FluentdDecimal +\s\d\+\.\d\++
-syn match FluentdIp +\s\+\d\{1,3}\(\.\d\{1,3}\)\{3}\(:\d\{1,5}\|/\d\{1,2}\)\?+
+syn region FluentdPluginBegin  matchgroup=fluentdDelimiterBegin start=+<+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveLabel,FluentdDirectiveBegin,FluentdSection
 
-syn match FluentdEnvironment +[#\$]{.*}+
-syn match FluentdRubyEnvironment +<%=.*%>+
-
-syn match FluentdInclude +@include[^>]*+
-syn keyword FluentdBoolean true false
-syn match FluentdUnderline +http[^>]*+
-
-syn keyword FluentdStructure server record regexp store buffer secondary parse contained nextgroup=FluentdDirectiveCondition skipwhite
-syn keyword FluentdInputPluginType tail forward udp tcp unix http syslog exec dummy monitor_agent windows_eventlog contained
-syn keyword FluentdOutputPluginType file forward http exec exec_filter secondary_file copy relabel roundrobin stdout null s3 kafka elasticsearch mongo mongo_replset rewrite_tag_filter webhdfs
-syn keyword FluentdFilterPluginType record_transformer
-
-syn keyword FluentdParameter host port apikey auto_create_table path tag enable_ruby pos_file path_timezone exclude_path refresh_interval limit_recently_modified skip_refresh_on_startup read_from_head encoding read_lines_limit multiline_flush_interval pos_file_compaction_interval path_key rotate_wait enable_watch_timer enable_stat_watcher open_on_every_update emit_unmatched_lines ignore_repeated_permission_error
-
-
-syn region FluentdPluginBegin  matchgroup=fluentdDelimiterBegin start=+<+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveLabel,FluentdDirectiveBegin,FluentdStructure
-syn region FluentdPluginEnd matchgroup=fluentdDelimiterEnd start=+</+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveEnd,FluentdStructure
+syn region FluentdPluginEnd matchgroup=fluentdDelimiterEnd start=+</+ end=+>$+ contains=FluentdDirectiveKeyword,FluentdDirectiveEnd,FluentdSection
 
 hi link FluentdInclude            Include
 hi link FluentdUnderline          Underlined
-hi link FluentdCommonParameter    Include
+hi link FluentdPluginParameter    Include
+hi link FluentdCommonParameter    Error
 
 hi link FluentdInputPluginType    Type
-"hi link FluentdOutputPluginType   Type
-"hi link FluentdFilterPluginType   Type
+hi link FluentdOutputPluginType   Type
+hi link FluentdFilterPluginType   Type
 
 hi link FluentdParameter          Tag
-hi link FluentdStructure          Structure
+hi link FluentdSection            Structure
 "hi link FluentdTag                Identifier
 hi link FluentdTag                Include
 hi link FluentdUserTag            Function

@@ -22,7 +22,7 @@ git clone https://github.com/namioto/fluentd-vim.git $TMP_PATH
 mkdir -p $VIM_SYNTAX_PATH
 cp -v /var/tmp/fluentd-vim/syntax/fluentd.vim $VIM_SYNTAX_PATH/fluentd.vim
 
-if ! grep -q -A1 -B1 "setfiletype fluentd" vimrc; then
+if ! grep -q -A1 -B1 "setfiletype fluentd" $VIM_RC; then
     # NOT FOUNDS - setfiletype fluentd
     {
         echo "augroup filetypedetect"
